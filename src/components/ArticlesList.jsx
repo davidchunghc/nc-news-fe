@@ -1,20 +1,30 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { fetchArticles } from "./api.jsx";
+import { fetchArticles } from "../utils/api.js";
 import ArticleCard from "./ArticleCard.jsx";
 
 const ArticlesList = () => {
   const [articles, setArticles] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     fetchArticles()
       .then((articlesFromApi) => {
         setArticles(articlesFromApi);
+        setIsLoading(false);
       })
       .catch((error) => {
+        setError("Fetch article details failed");
         throw error;
       });
   }, []);
+
+  if (isLoading) {
+    return <p>Loading Articles...</p>;
+  }
+
+  if (error) return <p>{error}</p>;
 
   return (
     <section>

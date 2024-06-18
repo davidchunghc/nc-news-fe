@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { fetchArticleById } from "./api.jsx";
+import { fetchArticleById } from "../utils/api.js";
 import { useParams } from "react-router-dom";
 import "../App.css";
 
 const ArticleDetail = () => {
   const { articleId } = useParams();
   const [article, setArticle] = useState({});
+  const [error, setError] = useState("");
 
   useEffect(() => {
     fetchArticleById(articleId)
@@ -13,9 +14,12 @@ const ArticleDetail = () => {
         setArticle(articleFromApi);
       })
       .catch((error) => {
+        setError("Fetch article details failed");
         throw error;
       });
   }, [articleId]);
+
+  if (error) return <p>{error}</p>;
 
   const formatDate = (dateString) => {
     const options = { year: "numeric", month: "2-digit", day: "2-digit" };
