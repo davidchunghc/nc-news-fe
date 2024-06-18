@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { fetchArticles } from "./api.jsx";
 import ArticleCard from "./ArticleCard.jsx";
 
@@ -20,7 +21,13 @@ const ArticlesList = () => {
       <h2>Articles List</h2>
       <ul>
         {articles.map((article) => {
-          return <ArticleCard key={article.article_id} article={article} />;
+          return (
+            <li key={article.article_id}>
+              <Link to={`/articles/${article.article_id}`}>
+                <ArticleCard article={article} />
+              </Link>
+            </li>
+          );
         })}
       </ul>
     </section>
