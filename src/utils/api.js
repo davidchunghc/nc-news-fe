@@ -15,4 +15,15 @@ export const fetchArticles = () => {
     });
 };
 
+export const fetchArticleById = (articleId) => {
+  return ncNewsApi
+    .get(`/articles/${articleId}`)
+    .then((response) => {
+      return response.data.article;
+    })
+    .catch((error) => {
+      throw error;
+    });
+};
+
 // https://be-nc-news-dc.onrender.com/api/articles
