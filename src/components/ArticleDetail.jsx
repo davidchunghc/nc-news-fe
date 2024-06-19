@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { fetchArticleById } from "../utils/api.js";
+import { fetchArticleById, updateArticleVotes } from "../utils/api.js";
 import { useParams } from "react-router-dom";
 import "../App.css";
 
@@ -7,6 +7,7 @@ const ArticleDetail = () => {
   const { articleId } = useParams();
   const [article, setArticle] = useState({});
   const [error, setError] = useState("");
+  const [voteError, setVoteError] = useState("");
 
   useEffect(() => {
     fetchArticleById(articleId)
@@ -19,7 +20,23 @@ const ArticleDetail = () => {
       });
   }, [articleId]);
 
-  if (error) return <p>{error}</p>;
+  const updateVote = (incrementValue) => {
+    setArticle((previousArticle) => ({
+      ...previousArticle,
+      votes: previousArticle.votes + incrementValue,
+    }));
+
+    updateArticleVotes(articleId, incrementValue)
+      .then((updatedArticle) => {
+        setArticle(updatedArticle);
+      })
+      .catch((error) => {
+        setVoteError("Cannot update vote!");
+        throw error;
+      });
+  };
+
+  if (error) return <p>{voteError}</p>;
 
   const formatDate = (dateString) => {
     const options = { year: "numeric", month: "2-digit", day: "2-digit" };
@@ -37,8 +54,12 @@ const ArticleDetail = () => {
         <p>Created at: {formatDate(article.created_at)}</p>
         <p>Votes: {article.votes}</p>
         <div>
-          <button className="voteButton">+</button>
-          <button className="voteButton">-</button>
+          <button className="voteButton" onClick={() => updateVote(1)}>
+            +
+          </button>
+          <button className="voteButton" onClick={() => updateVote(-1)}>
+            -
+          </button>
         </div>
       </li>
     </section>
