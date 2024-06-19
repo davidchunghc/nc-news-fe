@@ -59,9 +59,13 @@ const ArticleDetail = () => {
 
       <h3>Comments</h3>
       <div>
-        {comments.map((comment) => (
-          <CommentCard key={comment.comment_id} comment={comment} />
-        ))}
+        {comments.length === 0 ? (
+          <p>No comments yet, be the first person to comment!</p>
+        ) : (
+          comments.map((comment) => (
+            <CommentCard key={comment.comment_id} comment={comment} />
+          ))
+        )}
       </div>
     </section>
   );
