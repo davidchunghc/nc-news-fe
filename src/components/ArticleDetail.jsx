@@ -7,12 +7,15 @@ const ArticleDetail = () => {
   const { articleId } = useParams();
   const [article, setArticle] = useState({});
   const [error, setError] = useState("");
+  const [voteCount, setVoteCount] = useState(0);
+  const [voted, setVoted] = useState(false);
   const [voteError, setVoteError] = useState("");
 
   useEffect(() => {
     fetchArticleById(articleId)
       .then((articleFromApi) => {
         setArticle(articleFromApi);
+        setVoteCount(articleFromApi.votes);
       })
       .catch((error) => {
         setError("Fetch article details failed");
@@ -21,19 +24,15 @@ const ArticleDetail = () => {
   }, [articleId]);
 
   const updateVote = (incrementValue) => {
-    setArticle((previousArticle) => ({
-      ...previousArticle,
-      votes: previousArticle.votes + incrementValue,
-    }));
+    setVoteCount((currentVoteCount) => currentVoteCount + incrementValue);
+    setVoted(true);
 
-    updateArticleVotes(articleId, incrementValue)
-      .then((updatedArticle) => {
-        setArticle(updatedArticle);
-      })
-      .catch((error) => {
-        setVoteError("Cannot update vote!");
-        throw error;
-      });
+    updateArticleVotes(articleId, incrementValue).catch((error) => {
+      setVoteCount((currentVoteCount) => currentVoteCount - incrementValue);
+      setVoteError("Cannot update vote!");
+      setVoted(false);
+      throw error;
+    });
   };
 
   if (error) return <p>{voteError}</p>;
@@ -52,12 +51,20 @@ const ArticleDetail = () => {
         <img src={article.article_img_url} />
         <p>Body: {article.body}</p>
         <p>Created at: {formatDate(article.created_at)}</p>
-        <p>Votes: {article.votes}</p>
+        <p>Votes: {voteCount}</p>
         <div>
-          <button className="voteButton" onClick={() => updateVote(1)}>
+          <button
+            className="voteButton"
+            onClick={() => updateVote(1)}
+            disabled={voted}
+          >
             +
           </button>
-          <button className="voteButton" onClick={() => updateVote(-1)}>
+          <button
+            className="voteButton"
+            onClick={() => updateVote(-1)}
+            disabled={voted}
+          >
             -
           </button>
         </div>
