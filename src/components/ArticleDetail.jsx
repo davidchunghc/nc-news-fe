@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
-import { fetchArticleById, fetchCommentsByArticleId, updateArticleVotes } from "../utils/api.js";
+import {
+  fetchArticleById,
+  fetchCommentsByArticleId,
+  updateArticleVotes,
+} from "../utils/api.js";
 import { useParams } from "react-router-dom";
 import "../App.css";
 import CommentCard from "./CommentCard.jsx";
@@ -56,7 +60,6 @@ const ArticleDetail = () => {
 
   if (error) return <p>{error}</p>;
 
-
   const formatDate = (dateString) => {
     const options = { year: "numeric", month: "2-digit", day: "2-digit" };
     return new Date(dateString).toLocaleDateString(undefined, options);
@@ -70,23 +73,23 @@ const ArticleDetail = () => {
       <img src={article.article_img_url} />
       <p>Body: {article.body}</p>
       <p>Created at: {formatDate(article.created_at)}</p>
-      <p>Votes: {article.votes}</p>
+      <p>Votes: {voteCount}</p>
       <div>
-          <button
-            className="voteButton"
-            onClick={() => updateVote(1)}
-            disabled={voted}
-          >
-            +
-          </button>
-          <button
-            className="voteButton"
-            onClick={() => updateVote(-1)}
-            disabled={voted}
-          >
-            -
-          </button>
-        </div>
+        <button
+          className="vote-button"
+          onClick={() => updateVote(1)}
+          disabled={voted}
+        >
+          +
+        </button>
+        <button
+          className="vote-button"
+          onClick={() => updateVote(-1)}
+          disabled={voted}
+        >
+          -
+        </button>
+      </div>
 
       <h3>Comments</h3>
       <div>
