@@ -59,4 +59,15 @@ export const addComment = (articleId, username, body) => {
     });
 };
 
+export const deleteComment = (commentId) => {
+  return ncNewsApi
+    .delete(`/comments/${commentId}`)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      throw error;
+    });
+};
+
 // https://be-nc-news-dc.onrender.com/api/articles
