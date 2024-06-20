@@ -37,4 +37,15 @@ export const updateArticleVotes = (articleId, inc_votes) => {
     });
 };
 
+export const fetchCommentsByArticleId = (articleId) => {
+  return ncNewsApi
+    .get(`/articles/${articleId}/comments`)
+    .then((response) => {
+      return response.data.comments;
+    })
+    .catch((error) => {
+      throw error;
+    });
+};
+
 // https://be-nc-news-dc.onrender.com/api/articles
