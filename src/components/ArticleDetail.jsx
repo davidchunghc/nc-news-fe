@@ -7,8 +7,9 @@ import {
 import { useParams } from "react-router-dom";
 import "../App.css";
 import CommentCard from "./CommentCard.jsx";
+import CommentForm from "./CommentForm.jsx";
 
-const ArticleDetail = () => {
+const ArticleDetail = ({ username }) => {
   const { articleId } = useParams();
   const [article, setArticle] = useState({});
   const [isLoading, setIsLoading] = useState(true);
@@ -52,6 +53,10 @@ const ArticleDetail = () => {
     });
   };
 
+  const handleCommentBody = (newComment) => {
+    setComments((previousComments) => [newComment, ...previousComments]);
+  };
+
   if (error) return <p>{voteError}</p>;
 
   if (isLoading) {
@@ -92,6 +97,11 @@ const ArticleDetail = () => {
       </div>
 
       <h3>Comments</h3>
+      <CommentForm
+        articleId={articleId}
+        loggedInUser={username}
+        addCommentBody={handleCommentBody}
+      />
       <div>
         {comments.length === 0 ? (
           <p>No comments yet, be the first person to comment!</p>
