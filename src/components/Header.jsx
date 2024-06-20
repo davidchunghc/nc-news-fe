@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 
-const Header = () => {
+const Header = ({ username }) => {
   return (
     <header>
-      <h1>Welcome to NC News!</h1>
+      <h1>Welcome {username} to NC News!</h1>
     </header>
   );
 };

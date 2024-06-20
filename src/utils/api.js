@@ -48,4 +48,15 @@ export const fetchCommentsByArticleId = (articleId) => {
     });
 };
 
+export const addComment = (articleId, username, body) => {
+  return ncNewsApi
+    .post(`/articles/${articleId}/comments`, { username, body })
+    .then((response) => {
+      return response.data.comment;
+    })
+    .catch((error) => {
+      throw error;
+    });
+};
+
 // https://be-nc-news-dc.onrender.com/api/articles

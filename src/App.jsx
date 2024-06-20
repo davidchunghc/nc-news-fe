@@ -7,14 +7,18 @@ import ArticlesList from "./components/ArticlesList";
 import ArticleDetail from "./components/ArticleDetail";
 
 function App() {
+  const loggedInUser = "jessjelly";
   return (
     <BrowserRouter>
       <div>
-        <Header />
+        <Header username={loggedInUser} />
         <Nav />
         <Routes>
           <Route path="/articles" element={<ArticlesList />} />
-          <Route path="/articles/:articleId" element={<ArticleDetail />} />
+          <Route
+            path="/articles/:articleId"
+            element={<ArticleDetail username={loggedInUser} />}
+          />
         </Routes>
       </div>
     </BrowserRouter>
