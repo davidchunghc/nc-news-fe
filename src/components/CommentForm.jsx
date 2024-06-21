@@ -55,6 +55,7 @@ const CommentForm = ({ articleId, loggedInUser, addCommentBody }) => {
           {isSubmitting ? "Submitting Comment" : "Upload Comment"}
         </button>
         {commentError && <p>{commentError}</p>}
+        {successMsg && <p>{successMsg}</p>}
       </form>
     </div>
   );

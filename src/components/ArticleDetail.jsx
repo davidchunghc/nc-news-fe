@@ -3,12 +3,13 @@ import {
   fetchArticleById,
   fetchCommentsByArticleId,
   updateArticleVotes,
+  deleteComment,
 } from "../utils/api.js";
 import { useParams } from "react-router-dom";
 import "../App.css";
 import CommentCard from "./CommentCard.jsx";
 import CommentForm from "./CommentForm.jsx";
-import Popup from "./popup.jsx";
+import Popup from "./Popup.jsx";
 
 const ArticleDetail = ({ username }) => {
   const { articleId } = useParams();
@@ -20,6 +21,7 @@ const ArticleDetail = ({ username }) => {
   const [voted, setVoted] = useState(false);
   const [voteError, setVoteError] = useState("");
   const [delSuccessMsg, setDelSuccessMsg] = useState("");
+  const [delErrorMsg, setDelErrorMsg] = useState("");
 
   useEffect(() => {
     fetchArticleById(articleId)
@@ -59,6 +61,26 @@ const ArticleDetail = ({ username }) => {
     setComments((previousComments) => [newComment, ...previousComments]);
   };
 
+  const performDeleteComment = (commentId) => {
+    return deleteComment(commentId)
+      .then(() => {
+        setComments((previousComments) =>
+          previousComments.filter((comment) => comment.comment_id !== commentId)
+        );
+        setDelSuccessMsg("Comment deleted successfully!");
+        setDelErrorMsg("");
+      })
+      .catch((error) => {
+        setDelErrorMsg("Delete comment failed!");
+        throw error;
+      });
+  };
+
+  const closePopup = () => {
+    setDelSuccessMsg("");
+    setDelErrorMsg("");
+  };
+
   if (error) return <p>{voteError}</p>;
 
   if (isLoading) {
@@ -70,17 +92,6 @@ const ArticleDetail = ({ username }) => {
   const formatDate = (dateString) => {
     const options = { year: "numeric", month: "2-digit", day: "2-digit" };
     return new Date(dateString).toLocaleDateString(undefined, options);
-  };
-
-  const performDeleteComment = (commentId) => {
-    setComments((previousComments) =>
-      previousComments.filter((comment) => comment.comment_id !== commentId)
-    );
-    setDelSuccessMsg("Comment deleted!");
-  };
-
-  const closePopup = () => {
-    setDelSuccessMsg("");
   };
 
   return (
@@ -110,7 +121,9 @@ const ArticleDetail = ({ username }) => {
       </div>
 
       <h3>Comments</h3>
-      {delSuccessMsg && <Popup message={delSuccessMsg} onClose={closePopup} />}
+      {(delSuccessMsg || delErrorMsg) && (
+        <Popup message={delSuccessMsg || delErrorMsg} onClose={closePopup} />
+      )}
       <CommentForm
         articleId={articleId}
         loggedInUser={username}
